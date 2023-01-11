@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import {  Radio ,DatePicker,Space ,Button} from 'antd';
+import { DatePicker, Popconfirm, Radio, Space ,Button } from 'antd';
+import 'antd/dist/antd.css';
 import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +11,7 @@ import './EditUser.scss';
 import { message } from 'antd';
 import{getAllStudent,getStudentById,editUser,delUser} from '../../services/userService';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 
 
 class EditUser extends Component {
@@ -87,6 +89,7 @@ class EditUser extends Component {
                 address:user.address,
                 birthday:moment(user.birthday),
                 gender:user.gender,
+                setValue:user.gender,
             })}
     }
 
@@ -116,7 +119,7 @@ class EditUser extends Component {
             console.log(this.state[arrInput[i]],[arrInput[i]])
             if(!this.state[arrInput[i]]){
                 isValid =false;
-                message.error('Bạn chưa nhập: '+ arrInput[i] + ' ,vui lòng điền đầy đủ thông tin !!!');
+                toast.error('Bạn chưa nhập: '+ arrInput[i] + ' ,vui lòng điền đầy đủ thông tin !!!');
                 break;
             }
         }
@@ -128,7 +131,7 @@ class EditUser extends Component {
             let res = await delUser(idInput) ;
             console.log(res)
             if (res.status===200) {
-                await message.error('xóa sinh viên thất bại !')
+               await message.error('xóa sinh viên thất bại !')
             } else {
                await message.success("xóa thành công!")
                 this.props.history.push(`/system/user-manage`)

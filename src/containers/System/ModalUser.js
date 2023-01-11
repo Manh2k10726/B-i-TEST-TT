@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import {  Radio ,DatePicker,Space,Input,Form } from 'antd';
+import 'antd/dist/antd.css';
+import {  Radio ,DatePicker,Space, message } from 'antd';
 import moment, { months } from 'moment';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import {emitter} from '../../utils/emitter'
+import {emitter} from '../../utils/emitter';
+import { toast } from 'react-toastify';
 
 class ModalUser extends Component {
 
@@ -57,7 +59,7 @@ class ModalUser extends Component {
             console.log(this.state[arrInput[i]],[arrInput[i]])
             if(!this.state[arrInput[i]]){
                 isValid =false;
-                alert('Bạn chưa nhập: '+ arrInput[i] + ' ,vui lòng điền đầy đủ thông tin !!!');
+                toast.error('Bạn chưa nhập: '+ arrInput[i] + ' ,vui lòng điền đầy đủ thông tin !!!');
                 break;
             }
         }
@@ -89,101 +91,18 @@ class ModalUser extends Component {
             gender:e.target.value,
         })
       };
-       onFinish = (values) => {
-        console.log('Success:', values);
-      };
-    
-       onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-      };
     render() {
         return (
-            <Form
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                initialValues={{ remember: true }}
-                onFinish={this.onFinish()}
-                onFinishFailed={this.onFinishFailed()}
-                autoComplete="off"  >
             <Modal size="lg" isOpen={this.props.isOpen} toggle={(e)=>{this.toggle(e)}} className={"modal-user-container"}>
             <ModalHeader toggle={()=>{this.toggle()}}>Tạo Mới</ModalHeader>
             <ModalBody>
-                    <div className='modal-user-body'>
-                        <Form.Item>
-                            <div className='input-container'>
-                                <label>Tên Đăng Nhập (*) :</label>
-                                <Input type='username' value={this.state.username}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'username')}}/>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container'>
-                                <label>Họ (*):</label>
-                                <input type='text'value={this.state.firstname}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'firstname')}}/>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container'>
-                                <label>Tên (*) :</label>
-                                <input type='text' value={this.state.lastname}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'lastname')}}/>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container'>
-                                <label>Email (*):</label>
-                                <input type='email'value={this.state.email}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'email')}}/>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container max-w-input'>
-                                <label>Điện Thoại(*) :</label>
-                                <input type='text'value={this.state.phone}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'phone')}}/>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container max-w-input'>
-                                <label>Địa chỉ :</label>
-                                <input type='text'value={this.state.address}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'address')}}/>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container max-w-input'>
-                                <label>Ngày Sinh(*) :</label>
-                                    <Space direction="vertical">
-                                        <DatePicker name='birthday' format={'DD/MM/YYYY'} 
-                                        // value={moment(this.state.birthday)}
-                                            value={this.state.birthday}
-                                        onChange={this.onChange} />
-                                    </Space>
-                            </div>
-                        </Form.Item>
-                        <Form.Item>
-                            <div className='input-container max-w-input'>
-                                <label>Giới Tính(*) :</label>
-                                    <div className='gender-input'>
-                                        <Radio.Group onChange={this.handleOptionChange} value={this.state.gender}>
-                                            <Radio value={'0'}>nam</Radio>
-                                            <Radio value={'1'}>nữ</Radio>
-                                        </Radio.Group>
-                                    </div>
-                            </div>
-                        </Form.Item>
-                        <Form.Item></Form.Item>
-                </div>
-            </ModalBody>
-            {/* <ModalBody>
                 
                     <div className='modal-user-body'>
-                            <div className='input-container'>
-                                <label>Tên Đăng Nhập (*) :</label>
-                                <input type='username' value={this.state.username}
-                                onChange={(event)=> {this.handleOnChangeInput(event,'username')}}/>
-                            </div>
+                        <div className='input-container'>
+                            <label>Tên Đăng Nhập (*) :</label>
+                            <input type='username' value={this.state.username}
+                            onChange={(event)=> {this.handleOnChangeInput(event,'username')}}/>
+                        </div>
                         <div className='input-container'>
                             <label>Họ (*):</label>
                             <input type='text'value={this.state.firstname}
@@ -231,13 +150,12 @@ class ModalUser extends Component {
                 </div>
                 
              
-            </ModalBody> */}
+            </ModalBody>
             <ModalFooter>
-              <Button color="primary" className='px-3'type="primary" htmlType="submit" onClick={()=>{this.handleAddNewUser()}}>Tạo </Button>{' '}
+              <Button color="primary" className='px-3' onClick={()=>{this.handleAddNewUser()}}>Tạo </Button>{' '}
               <Button color="secondary" className='px-3' onClick={()=>{this.toggle()}}>Đóng</Button>
             </ModalFooter>
-            </Modal>
-          </Form>
+          </Modal>
         )
     }
 

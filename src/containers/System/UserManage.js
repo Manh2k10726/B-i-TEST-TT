@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import 'antd/dist/antd.css';
 // import { Button, Space,Table } from 'antd';
 import Pagination from "react-js-pagination";
 import { connect } from 'react-redux';
@@ -7,50 +8,68 @@ import './UserManage.scss'
 import ModalUser from './ModalUser'
 import {emitter} from '../../utils/emitter'
 import{getAllStudent ,createNewUserService} from '../../services/userService';
-import { message, Table } from 'antd';
+import {message,Table} from 'antd'
 
-const columns = [
-    {
-      title: 'Tên Đăng Nhập',
-      dataIndex: 'username',
-      key: 'name',
-    },
-    {
-      title: 'Họ',
-      dataIndex: 'firstname',
-      key: 'firstname',
-    },
-    {
-      title: 'Tên',
-      dataIndex: 'lastname',
-      key: 'lastname',
-    },
-    {
-        title: 'email',
-        dataIndex: 'email',
-        key: 'email',
-      },
-      {
-        title: 'Điện Thoại',
-        dataIndex: 'phone',
-        key: 'phone',
-      },
-      {
-        title: 'Địa chỉ',
-        dataIndex: 'address',
-        key: 'address',
-      },
-      {
-        title: 'Ngày Sinh',
-        dataIndex: 'birthday',
-        key: 'birthday',
-      },
-      {
-        title: 'Giới Tính',
-        dataIndex: 'gender',
-        key: 'gender',
-      },
-  ];
+
+// const columns = [
+//     {
+//       title: 'Tên Đăng Nhập',
+//       dataIndex: 'username',
+//       key: 'name',
+//     },
+//     {
+//       title: 'Họ',
+//       dataIndex: 'firstname',
+//       key: 'firstname',
+//     },
+//     {
+//       title: 'Tên',
+//       dataIndex: 'lastname',
+//       key: 'lastname',
+//     },
+//     {
+//         title: 'email',
+//         dataIndex: 'email',
+//         key: 'email',
+//       },
+//       {
+//         title: 'Điện Thoại',
+//         dataIndex: 'phone',
+//         key: 'phone',
+//       },
+//       {
+//         title: 'Địa chỉ',
+//         dataIndex: 'address',
+//         key: 'address',
+//       },
+//       {
+//         title: 'Ngày Sinh',
+//         dataIndex: 'birthday',
+//         key: 'birthday',
+//       },
+//       {
+//         title: 'Giới Tính',
+//         dataIndex: 'gender',
+//         key: 'gender',
+//       },
+//       {
+//         title: '',
+//         dataIndex: 'id',
+//         key: 'id',
+//         render: (text, item) => {
+//             return <div className='flex'>
+//                 <button className='mx-4 text-green-500 hover:text-green-900' title='Sửa' 
+//                 // onClick={() => {
+//                 //             this.props.history.push(`/detail-user/${item.id}`)
+//                 // }}
+//                 onClick={()=>this.handleEdit(item)}
+//                 >
+//                     <i className="fas fa-pencil-alt" style={{ fontSize: 10 }}></i>
+//                 </button>
+//             </div>
+//             },
+//     },
+//   ];
 class UserManage extends Component {
 
     constructor(props){
@@ -63,7 +82,7 @@ class UserManage extends Component {
             totalItemsCount: '',
             idUserEdit:'',
             page:'0',
-            size:'2'
+            size:''
         }
     }
 
@@ -83,7 +102,6 @@ class UserManage extends Component {
         if(response ){
             this.setState({
                 arrUser: response.data,
-                // activePage: response.page,
                 itemsCountPerPage: response.total_count,
                 totalItemsCount: response.total_page,
             })
@@ -181,18 +199,7 @@ class UserManage extends Component {
                             </tbody>
                     </table>
                 </div>
-                {/* <Table
-                    dataSource={arrUser}
-                    columns={columns}
-                    key=''
-                    pagination={{
-                        defaultCurrent: 1,
-                        total: `${this.state.totalItemsCount}`,
-                        onChange: (page, pageSize) => {
-                            this.GetListStudentAction(page - 1)
-                            // history.replace(`/system/user-manage/${page}`)
-                        }
-                    }} />; */}
+
                 <div style={{float: 'right'}}>
                     <Pagination
                         activePage={this.state.activePage}
@@ -204,7 +211,20 @@ class UserManage extends Component {
                         itemClass="page-item"
                         linkClass="page-link"
                     />
-          </div>
+                </div>
+                {/* <Table
+                    dataSource={arrUser}
+                    columns={columns}
+                    key=''
+                    pagination={{
+                        defaultCurrent: 1,
+                        total: `${this.state.totalItemsCount}`,
+                        onChange: (page, pageSize) => {
+                            this.GetListStudentAction(page - 1)
+                            this.props.history.replace(`/system/user-manage/${page}`)
+                        }
+                    }} />; */}
+                
             </div>
         );
     }
