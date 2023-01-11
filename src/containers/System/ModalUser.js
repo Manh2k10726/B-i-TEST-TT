@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import {  Radio ,DatePicker,Space } from 'antd';
-import moment from 'moment';
+import moment, { months } from 'moment';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {emitter} from '../../utils/emitter'
 
@@ -66,9 +66,10 @@ class ModalUser extends Component {
     handleAddNewUser = () =>{
         let isValid = this.checkValidateInput();
         if(isValid == true){
-            let date =  new Date(this.state.birthday).getTime();
+            // let date =  new Date(this.state.birthday).getTime();
+            let day = moment(this.state.birthday)
             this.setState({
-                birthday:date
+                birthday:day
             })
             this.props.createNewUser(this.state);
             
@@ -78,7 +79,7 @@ class ModalUser extends Component {
     onChange = (date,dateString) => {
         console.log(date);
         this.setState({
-            birthday:date
+            birthday: date
         })
       };
     handleOptionChange = (e) => {
@@ -129,7 +130,10 @@ class ModalUser extends Component {
                         <div className='input-container max-w-input'>
                             <label>Ngày Sinh(*) :</label>
                                 <Space direction="vertical">
-                                    <DatePicker   format="DD/MM/YYYY"  onChange={this.onChange} />
+                                    <DatePicker name='birthday' format={'DD/MM/YYYY'} 
+                                        // value={moment(this.state.birthday)}
+                                        value={this.state.birthday}
+                                     onChange={this.onChange} />
                                 </Space>
                         </div>
                         <div className='input-container max-w-input'>

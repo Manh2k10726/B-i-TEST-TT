@@ -4,8 +4,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {  Radio ,DatePicker,Space ,Button} from 'antd';
 import moment from 'moment';
-import './EditUser.scss'
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import './EditUser.scss';
+import { message } from 'antd';
 import{getAllStudent,getStudentById,editUser,delUser} from '../../services/userService';
+import _ from 'lodash';
+
 
 class EditUser extends Component {
 
@@ -13,7 +18,6 @@ class EditUser extends Component {
         super(props);
         this.state = {
             editUser:{},
-            arrUser:[],
             username:'',
             firstname:'',
             lastname:'',
@@ -25,16 +29,71 @@ class EditUser extends Component {
             setValue:'0'
           };
     }
+     
+    //  formik = useFormik({
+    //     enableReinitialize: true,
+    //     initialValues: {
+    //         username: editUser?.username,
+    //         firstname: editUser?.firstname,
+    //         lastname: editUser?.lastname,
+    //         email: editUser?.email,
+    //         phone: editUser?.phone,
+    //         address: editUser?.address,
+    //         birthday: editUser?.birthday,
+    //         gender: editUser?.gender,
+    //     },
+    //     validationSchema: Yup.object({
+    //         username: Yup.string()
+    //             .required("Không được trống !"),
+    
+    //         firstname: Yup.string()
+    //             .required("Không được trống !"),
+    
+    //         lastname: Yup.string()
+    //             .required("Không được trống !"),
+    
+    //         email: Yup.string()
+    //             .required("Không được trống !"),
+    
+    //         phone: Yup.string()
+    //             .matches(/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, {
+    //                 message: "Số điện thoại chưa đúng",
+    //                 excludeEmptyString: false,
+    //             })
+    //             .required("Không được trống !"),
+    
+    //         birthday: Yup.string()
+    //             .required("Không được trống !"),
+    
+    //         gender: Yup.string()
+    //             .required("Không được trống !"),
+    
+    //     }),
+    //     onSubmit: values => {
+    //       this.handleDoEditUser(id, values)
+    //     }
+    // })
     async componentDidMount() {
         let idInput = this.props.match.params.id
-        await this.getStudentByIds({id:idInput});
+        await this.getStudentByIds();
+        let user = this.state.editUser;
+        if (user && !_.isEmpty(user)) {
+            this.setState({
+                username:user.username,
+                firstname:user.firstname,
+                lastname:user.lastname,
+                email:user.email,
+                phone:user.phone,
+                address:user.address,
+                birthday:moment(user.birthday),
+                gender:user.gender,
+            })}
     }
-//    let idInput = this.props.match.params
+
     getStudentByIds = async()=>{
         let idInput = this.props.match.params.id
         console.log('check id :',typeof idInput)
-        let x = Number(idInput)
-        console.log('check id x :', x)
+
         let res = await getStudentById(idInput);
         console.log("check data1 edit:",res)
         if(res ){
@@ -52,45 +111,62 @@ class EditUser extends Component {
     }
     checkValidateInput =() => {
         let isValid = true;
-        let arrInput =['username','firstname','lastname',"email",'phone','birthday','gender'];
+        let arrInput =['username','firstname','lastname',"email",'phone','gender'];
         for(let i = 0 ; i< arrInput.length;i++){
             console.log(this.state[arrInput[i]],[arrInput[i]])
             if(!this.state[arrInput[i]]){
                 isValid =false;
-                alert('Bạn chưa nhập: '+ arrInput[i] + ' ,vui lòng điền đầy đủ thông tin !!!');
+                message.error('Bạn chưa nhập: '+ arrInput[i] + ' ,vui lòng điền đầy đủ thông tin !!!');
                 break;
             }
         }
         return isValid;
     }
-    handleDelUser= async (id)=>{
+    handleDelUser= async ()=>{
+        let idInput = this.props.match.params.id
         try {
-            let res = await delUser({id:this.arrUser.id}) ;
+            let res = await delUser(idInput) ;
             console.log(res)
-            if (res) {
-                await this.getAllStudent();
+            if (res.status===200) {
+                await message.success("xóa thành công!")
+                this.props.history.push(`/system/user-manage`)
             } else {
-                alert('lỗi chỉnh sửa!')
+               await message.error('xóa sinh viên thất bại !')
             }
         } catch (e) {
             console.log(e)
         }
-        this.props.history.push(`/system/user-manage`)
+
     }
-    handleDoEditUser= async (id)=>{
+    handleDoEditUser= async (data)=>{
+        let idInput = this.props.match.params.id
         try {
-            let res =await editUser({id:this.arrUser.id});
-            console.log(res)
-            if (res) {
-                await this.getAllStudent();
+            let res = await editUser(idInput,data);
+            console.log('data edit',res)
+            if (res.status === 200) {
+                await message.error('cập nhật sinh viên thất bại !')
             } else {
-                alert('lỗi chỉnh sửa!')
+                await message.success("Cập nhật thành công!")
+                this.props.history.push(`/system/user-manage`)
+
             }
         } catch (e) {
             console.log(e) 
         }
-    this.props.history.push(`/system/user-manage`)
         
+        
+    }
+    handleSaveUser = async () =>{
+        let isValid = this.checkValidateInput();
+        if(isValid == true){
+        //     let day =  new Date(this.state.birthday).getTime();
+        //     let day = moment(this.state.birthday);
+        //         this.setState({
+        //     birthday:day
+        // })
+            //call api
+           await this.handleDoEditUser(this.state);   
+        }
     }
     onChange = (date) => {
         console.log(date);
@@ -105,7 +181,7 @@ class EditUser extends Component {
             gender:e.target.value,
         })
       };
-    //   this.props.history.push(`/detail-doctor/${doctor.id}`)
+
     handleClose =()=>{
         this.props.history.push(`/system/user-manage`)
     }
@@ -122,46 +198,66 @@ class EditUser extends Component {
                             <div className='col-12 text-header' my-8>Chỉnh sửa thông tin</div>
                             <div className='col-12'>
                                 <label>Tên Đăng Nhập (*) :</label>
-                                    <input className='form-control' type='username' value={this.state.editUser.username}
+                                    <input className='form-control' type='username'
+                                    //  defaultValue={this.state.editUser.username}
+                                     value={this.state.username}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'username')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Họ (*):</label>
-                                    <input className='form-control' type='text'value={this.state.editUser.firstname}
+                                    <input className='form-control' type='text'
+                                    // defaultValue={this.state.editUser.firstname}
+                                    value={this.state.firstname}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'firstname')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Tên (*) :</label>
-                                    <input className='form-control' type='text' value={this.state.editUser.lastname}
+                                    <input className='form-control' type='text'
+                                    value={this.state.lastname}
+                                    // defaultValue={this.state.editUser.lastname}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'lastname')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Email (*):</label>
-                                    <input className='form-control' type='email'value={this.state.editUser.email}
+                                    <input className='form-control' type='email'
+                                    value={this.state.email}
+                                    // defaultValue={this.state.editUser.email}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'email')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Điện Thoại(*) :</label>
-                                    <input className='form-control' type='text'value={this.state.editUser.phone}
+                                    <input className='form-control' type='text'
+                                    value={this.state.phone}
+                                    // defaultValue={this.state.editUser.phone}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'phone')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Địa chỉ :</label>
-                                    <input className='form-control' type='text'value={this.state.editUser.address}
+                                    <input className='form-control' type='text'
+                                    value={this.state.address}
+                                    // defaultValue={this.state.editUser.address}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'address')}}/>
                             </div>
                             <div className='col-12 '>
                                 <label>Ngày Sinh :</label>
                                     <div >
                                         <Space   direction="vertical">
-                                            <DatePicker  format="DD/MM/YYYY"  onChange={this.onChange} />
+                                            <DatePicker  
+                                            format='DD-MM-YYYY'
+                                            value={this.state.birthday}
+                                            // value={moment(this.state.birthday)} 
+                                             onChange={this.onChange} />
                                         </Space>
                                     </div>
                             </div>
                             <div className='col-12'>
                                 <label>Giới Tính(*) :</label>
                                     <div >
-                                        <Radio.Group onChange={this.handleOptionChange} value={this.state.gender}>
+                                        <Radio.Group 
+                                        // defaultValue={this.state.editUser.gender} 
+                                        onChange={this.handleOptionChange} 
+                                        value={this.state.gender}
+                                        >
                                             <Radio value={'0'}>nam</Radio>
                                             <Radio value={'1'}>nữ</Radio>
                                         </Radio.Group>
@@ -175,7 +271,7 @@ class EditUser extends Component {
                                     <Button onClick={()=>this.handleDelUser()}>Xóa</Button>
                                 </div>
                                 <div className='col-3'>
-                                    <Button onClick={()=>this.handleDoEditUser()}>Cập Nhật</Button>
+                                    <Button onClick={()=>this.handleSaveUser()}>Cập Nhật</Button>
                                 </div>
                             </div>
                         </div>

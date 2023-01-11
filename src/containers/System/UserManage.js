@@ -7,7 +7,7 @@ import './UserManage.scss'
 import ModalUser from './ModalUser'
 import {emitter} from '../../utils/emitter'
 import{getAllStudent ,createNewUserService} from '../../services/userService';
-import { Table } from 'antd';
+import { message, Table } from 'antd';
 
 const columns = [
     {
@@ -71,6 +71,13 @@ class UserManage extends Component {
         await this.getAllStudent();
         console.log('check data')
     }
+    async componentDidUpdate(prevProps, prevState){
+        // if(prevState.this.state.arrUser !== this.state.arrUser){
+        //     this.setState({
+        //         arrUser:this.state.arrUser
+        //     })
+        // }
+    }
     getAllStudent = async()=>{
         let response =await getAllStudent({pageNumber:this.state.page});
         if(response ){
@@ -96,7 +103,7 @@ class UserManage extends Component {
         try {
             let response =await createNewUserService(data);
             if (response ) {
-                alert("lỗi thêm dữ liệu")
+                await message.error("thêm mới thất bại")
             } else {
                 await this.getAllStudent();
                 this.setState({
@@ -113,10 +120,13 @@ class UserManage extends Component {
     handlePageChange = async (pageNumber)=> {
             this.setState({
                     activePage: pageNumber,
-                    page:pageNumber -1
+                    page:pageNumber -1,
+                    
             },async()=> {
-                await this.getAllStudent()
+                // await this.getAllStudent(pageNumber-1)
              });
+        await this.getAllStudent(this.state.page)
+        this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
         console.log('check page:',this.state.page)
     }
     handleEdit =(item)=>{
@@ -129,6 +139,7 @@ class UserManage extends Component {
 
     render() {
         let arrUser = this.state.arrUser;
+        console.log('check user:',arrUser)
         return (
             <div className="user-container">
                 <ModalUser
@@ -159,7 +170,7 @@ class UserManage extends Component {
                                     return(
                                         <tr key={index} onClick={()=>this.handleEdit(item)}>
                                             <td> {item.username}</td>
-                                            <td><span>{item.lastname}</span> <span>{item.firstname}</span>  </td>
+                                            <td> <span>{item.firstname}</span> <span>{item.lastname}</span> </td>
                                             <td>{item.email}</td>
                                             <td>{item.phone}</td>
                                         </tr>
@@ -170,7 +181,18 @@ class UserManage extends Component {
                             </tbody>
                     </table>
                 </div>
-                {/* <Table columns={columns} dataSource={arrUser} rowKey='id' /> */}
+                {/* <Table
+                    dataSource={arrUser}
+                    columns={columns}
+                    key=''
+                    pagination={{
+                        defaultCurrent: 1,
+                        total: `${this.state.totalItemsCount}`,
+                        onChange: (page, pageSize) => {
+                            this.GetListStudentAction(page - 1)
+                            // history.replace(`/system/user-manage/${page}`)
+                        }
+                    }} />; */}
                 <div style={{float: 'right'}}>
                     <Pagination
                         activePage={this.state.activePage}
