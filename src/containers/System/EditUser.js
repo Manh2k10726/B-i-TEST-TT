@@ -128,10 +128,10 @@ class EditUser extends Component {
             let res = await delUser(idInput) ;
             console.log(res)
             if (res.status===200) {
-                await message.success("xóa thành công!")
-                this.props.history.push(`/system/user-manage`)
+                await message.error('xóa sinh viên thất bại !')
             } else {
-               await message.error('xóa sinh viên thất bại !')
+               await message.success("xóa thành công!")
+                this.props.history.push(`/system/user-manage`)
             }
         } catch (e) {
             console.log(e)
@@ -199,14 +199,12 @@ class EditUser extends Component {
                             <div className='col-12'>
                                 <label>Tên Đăng Nhập (*) :</label>
                                     <input className='form-control' type='username'
-                                    //  defaultValue={this.state.editUser.username}
                                      value={this.state.username}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'username')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Họ (*):</label>
                                     <input className='form-control' type='text'
-                                    // defaultValue={this.state.editUser.firstname}
                                     value={this.state.firstname}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'firstname')}}/>
                             </div>
@@ -214,28 +212,24 @@ class EditUser extends Component {
                                 <label>Tên (*) :</label>
                                     <input className='form-control' type='text'
                                     value={this.state.lastname}
-                                    // defaultValue={this.state.editUser.lastname}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'lastname')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Email (*):</label>
                                     <input className='form-control' type='email'
                                     value={this.state.email}
-                                    // defaultValue={this.state.editUser.email}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'email')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Điện Thoại(*) :</label>
                                     <input className='form-control' type='text'
                                     value={this.state.phone}
-                                    // defaultValue={this.state.editUser.phone}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'phone')}}/>
                             </div>
                             <div className='col-12'>
                                 <label>Địa chỉ :</label>
                                     <input className='form-control' type='text'
                                     value={this.state.address}
-                                    // defaultValue={this.state.editUser.address}
                                 onChange={(event)=> {this.handleOnChangeInput(event,'address')}}/>
                             </div>
                             <div className='col-12 '>
