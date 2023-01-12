@@ -267,10 +267,10 @@ class EditUser extends Component {
                                         <Radio.Group 
                                         // defaultValue={'0'} 
                                         onChange={(event)=>this.handleOptionChange(event,'gender')} 
-                                        value={editUser.gender}
+                                        value={editUser && editUser.gender ? editUser.gender :this.state.gender}
                                         >
-                                            <Radio value={editUser && editUser.gender === 0 ? editUser.gender :'0'}>nam</Radio>
-                                            <Radio value={editUser && editUser.gender === 1? editUser.gender :'1'}>nữ</Radio>
+                                            <Radio value={0}>nam</Radio>
+                                            <Radio value={1}>nữ</Radio>
                                         </Radio.Group>
                                     </div>
                             </div>
