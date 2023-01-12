@@ -13,8 +13,6 @@ import{getAllStudent,getStudentById,editUser,delUser} from '../../services/userS
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 
-
-
 class EditUser extends Component {
 
     constructor(props) {
@@ -111,6 +109,7 @@ class EditUser extends Component {
         if(res ){
             this.setState({
                 editUser: res,
+                setValue:res.gender
             })
         }
     }
@@ -123,7 +122,7 @@ class EditUser extends Component {
     }
     checkValidateInput =() => {
         let isValid = true;
-        let arrInput =['username','firstname','lastname',"email",'phone','gender'];
+        let arrInput =['username','firstname','lastname',"email",'phone'];
         for(let i = 0 ; i< arrInput.length;i++){
             console.log(this.state[arrInput[i]],[arrInput[i]])
             if(!this.state[arrInput[i]]){
@@ -189,15 +188,21 @@ class EditUser extends Component {
       handleOptionChange = (e) => {
         console.log('radio checked', e.target.value);
         this.setState({
-            setValue:this.state.gender,
+            setValue:e.target.value,
             gender:e.target.value,
-        })
+        }
+            // ,async()=> {
+            //     this.setState({
+            //         setValue:this.state.gender,
+            //     })
+            // }
+         )
       };
 
     handleClose =()=>{
         this.props.history.push(`/system/user-manage`)
     }
-    
+
     render() {
         let {editUser} = this.state
         console.log('check data Sinh viên: ',editUser)
@@ -260,12 +265,12 @@ class EditUser extends Component {
                                 <label>Giới Tính(*) :</label>
                                     <div >
                                         <Radio.Group 
-                                        defaultValue={'0'} 
-                                        onChange={this.handleOptionChange} 
-                                        value={this.state.gender}
+                                        // defaultValue={'0'} 
+                                        onChange={(event)=>this.handleOptionChange(event,'gender')} 
+                                        value={editUser.gender}
                                         >
-                                            <Radio value={'0'}>nam</Radio>
-                                            <Radio value={'1'}>nữ</Radio>
+                                            <Radio value={editUser && editUser.gender === 0 ? editUser.gender :'0'}>nam</Radio>
+                                            <Radio value={editUser && editUser.gender === 1? editUser.gender :'1'}>nữ</Radio>
                                         </Radio.Group>
                                     </div>
                             </div>
