@@ -81,34 +81,41 @@ class UserManage extends Component {
             itemsCountPerPage: '',
             totalItemsCount: '',
             idUserEdit:'',
-            page:'0',
-            // page:'',
+            page:'',
             size:'',
         }
     }
 
     async componentDidMount() {
         await this.getAllStudent();
-        console.log('check data')
+        
     }
     async componentDidUpdate(prevProps, prevState){
-
+        // let number = this.props.match.params;
+        // console.log('check num',number)
+        // await this.getAllStudent(number)
         if(prevState.arrUser !== this.state.arrUser){
             this.setState({
                 arrUser:this.state.arrUser
             })
         }
         if(prevState.page !== this.state.page){
+            // let number = this.props.match.params;
+            //   await this.getAllStudent(number)
             this.setState({
                 page:this.state.page,
             },async()=> {
-                await this.getAllStudent(this.state.page)
+                let Page = this.state.page ? this.state.page : '0' 
+                await this.getAllStudent(Page)
                 console.log('check page 1 :',this.state.page)
              })
         }
     }
     getAllStudent = async()=>{
-        let response =await getAllStudent({pageNumber:this.state.page});
+        let number = this.props.match.params;
+                // let Page = number ? number.page : '0' 
+                // console.log('check num2:',number)
+        let response =await getAllStudent({pageNumber:number.page});
         if(response ){
             this.setState({
                 arrUser: response.data,
@@ -117,17 +124,7 @@ class UserManage extends Component {
             })
         }
     } 
-    // getAllStudent = async(pages)=>{
-    //     // let pages=0;
-    //     let response =await getAllStudent({pages:this.state.page});
-    //     if(response ){
-    //         this.setState({
-    //             arrUser: response.data,
-    //             itemsCountPerPage: response.total_count,
-    //             totalItemsCount: response.total_page,
-    //         })
-    //     }
-    // }
+
     toggleUserModal = () => {
         this.setState({
             isOpenModalUser:!this.state.isOpenModalUser,
@@ -165,9 +162,7 @@ class UserManage extends Component {
                 this.props.history.replace(`/system/user-manages/${this.state.page + 1}`)
                 console.log('check page active:',this.state.page)
              });
-            // await this.getAllStudent(this.state.page)
-            // this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
-            // console.log('check page active:',this.state.page)
+            
     }
     // handlePageChange = async (event)=> {
     //     let pageNumbers = event.target.value;
@@ -198,11 +193,12 @@ class UserManage extends Component {
                 toggleFromParent={this.toggleUserModal}
                 createNewUser={this.handleCreateUser}
                 />
+
                 
-                <div className='title text-center'>
+                <div className='mx-1 header'>
+                    <div className='text '>
                         Hệ Thống Quản lý Sinh Viên
-                </div>
-                <div className='mx-1'>
+                    </div>
                     <button className='btn btn-primary px-3'
                         onClick={()=> this.handleAddNewUser()}
                     ><i className="fas fa-plus-circle"></i> Tạo Mới</button>
@@ -236,7 +232,6 @@ class UserManage extends Component {
                 <div style={{float: 'right'}}>
                     <Pagination
                         activePage={this.state.activePage}
-                        // itemsCountPerPage={this.state.totalItemsCount}
                         totalItemsCount={this.state.totalItemsCount}
                         itemsCountPerPage={1}
                         pageRangeDisplayed={5}

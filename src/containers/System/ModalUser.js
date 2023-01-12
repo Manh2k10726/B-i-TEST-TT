@@ -36,7 +36,7 @@ class ModalUser extends Component {
                 address:'',
                 birthday:'',
                 gender:'',
-                setValue:'0'
+                setValue:''
             })
         })
     }
@@ -68,7 +68,6 @@ class ModalUser extends Component {
     handleAddNewUser = () =>{
         let isValid = this.checkValidateInput();
         if(isValid == true){
-            // let date =  new Date(this.state.birthday).getTime();
             let day = moment(this.state.birthday)
             this.setState({
                 birthday:day
@@ -142,8 +141,8 @@ class ModalUser extends Component {
                             <label>Giới Tính(*) :</label>
                                 <div className='gender-input'>
                                     <Radio.Group onChange={this.handleOptionChange} value={this.state.gender}>
-                                        <Radio value={'0'}>nam</Radio>
-                                        <Radio value={'1'}>nữ</Radio>
+                                        <Radio value={0}>nam</Radio>
+                                        <Radio value={1}>nữ</Radio>
                                     </Radio.Group>
                                 </div>
                         </div>

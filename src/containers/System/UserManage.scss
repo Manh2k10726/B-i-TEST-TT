@@ -22,6 +22,14 @@
   }
   .user-container{
     margin: 10px 200px;
+    .header{
+      display: flex;
+      justify-content: space-between;
+      .text{
+        font-size: 20px;
+        font-weight: 700;
+      }
+    }
   }
   .btn-edit{
     width: 50px;

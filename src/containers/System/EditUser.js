@@ -142,7 +142,7 @@ class EditUser extends Component {
                await message.error('xóa sinh viên thất bại !')
             } else {
                await message.success("xóa thành công!")
-                this.props.history.push(`/system/user-manage`)
+                this.props.history.push(`/system/user-manages/1`)
             }
         } catch (e) {
             console.log(e)
@@ -158,7 +158,7 @@ class EditUser extends Component {
                 await message.error('cập nhật sinh viên thất bại !')
             } else {
                 await message.success("Cập nhật thành công!")
-                this.props.history.push(`/system/user-manage`)
+                this.props.history.push(`/system/user-manages/1`)
 
             }
         } catch (e) {
@@ -200,7 +200,7 @@ class EditUser extends Component {
       };
 
     handleClose =()=>{
-        this.props.history.push(`/system/user-manage`)
+        this.props.history.push(`/system/user-manages/1`)
     }
 
     render() {
@@ -274,7 +274,9 @@ class EditUser extends Component {
                                         </Radio.Group>
                                     </div>
                             </div>
-                            <div className='custom-btn' style={{float:'right'}}  >
+                            
+                        </div>
+                          <div className='custom-btn' style={{float:'right'}}  >
                                 <div className='col-3'>
                                     <Button onClick={()=>this.handleClose()}>Đóng</Button>
                                  </div>
@@ -285,13 +287,11 @@ class EditUser extends Component {
                                     <Button onClick={()=>this.handleSaveUser()}>Cập Nhật</Button>
                                 </div>
                             </div>
-                        </div>
                     </div>
                     
                    
                 </div>
-            </div>
-                
+            </div>    
             </>
             
         )
