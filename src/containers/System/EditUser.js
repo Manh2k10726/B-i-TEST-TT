@@ -14,6 +14,7 @@ import _ from 'lodash';
 import { toast } from 'react-toastify';
 
 
+
 class EditUser extends Component {
 
     constructor(props) {
@@ -28,7 +29,7 @@ class EditUser extends Component {
             address:'',
             birthday:'',
             gender:'',
-            setValue:'0'
+            setValue:''
           };
     }
      
@@ -93,6 +94,14 @@ class EditUser extends Component {
             })}
     }
 
+    async componentDidUpdate(prevProps, prevState){
+        let genders = this.state.gender
+        if (prevState.gender !== genders) {
+           this.setState({
+            gender:genders
+           })
+          }
+    }
     getStudentByIds = async()=>{
         let idInput = this.props.match.params.id
         console.log('check id :',typeof idInput)
@@ -251,7 +260,7 @@ class EditUser extends Component {
                                 <label>Giới Tính(*) :</label>
                                     <div >
                                         <Radio.Group 
-                                        // defaultValue={this.state.editUser.gender} 
+                                        defaultValue={'0'} 
                                         onChange={this.handleOptionChange} 
                                         value={this.state.gender}
                                         >

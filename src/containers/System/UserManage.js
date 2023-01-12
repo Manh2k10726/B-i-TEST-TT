@@ -77,12 +77,12 @@ class UserManage extends Component {
         this.state = {
             arrUser:[],
             isOpenModalUser:false,
-            activePage: '2',
+            activePage: '',
             itemsCountPerPage: '',
             totalItemsCount: '',
             idUserEdit:'',
             page:'0',
-            size:''
+            size:'',
         }
     }
 
@@ -91,11 +91,20 @@ class UserManage extends Component {
         console.log('check data')
     }
     async componentDidUpdate(prevProps, prevState){
-        // if(prevState.this.state.arrUser !== this.state.arrUser){
-        //     this.setState({
-        //         arrUser:this.state.arrUser
-        //     })
-        // }
+
+        if(prevState.arrUser !== this.state.arrUser){
+            this.setState({
+                arrUser:this.state.arrUser
+            })
+        }
+        if(prevState.page !== this.state.page){
+            this.setState({
+                page:this.state.page,
+            },async()=> {
+                await this.getAllStudent(this.state.page)
+                console.log('check page 1 :',this.state.page)
+             })
+        }
     }
     getAllStudent = async()=>{
         let response =await getAllStudent({pageNumber:this.state.page});
@@ -141,11 +150,13 @@ class UserManage extends Component {
                     page:pageNumber -1,
                     
             },async()=> {
-                // await this.getAllStudent(pageNumber-1)
+                await this.getAllStudent(pageNumber-1)
+                this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
+                console.log('check page active:',this.state.page)
              });
-        await this.getAllStudent(this.state.page)
-        this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
-        console.log('check page:',this.state.page)
+            // await this.getAllStudent(this.state.page)
+            // this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
+            // console.log('check page active:',this.state.page)
     }
     handleEdit =(item)=>{
         this.props.history.push(`/detail-user/${item.id}`)
