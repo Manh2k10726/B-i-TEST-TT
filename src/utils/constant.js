@@ -6,6 +6,7 @@ export const path = {
     LOG_OUT: '/logout',
     SYSTEM: '/system',
     DETAIL_USER:'/detail-user/:id',
+    DETAIL_HOME:'/home-user/:page'
 };
 
 export const languages = {

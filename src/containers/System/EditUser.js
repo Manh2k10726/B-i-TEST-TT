@@ -189,7 +189,7 @@ class EditUser extends Component {
       handleOptionChange = (e) => {
         console.log('radio checked', e.target.value);
         this.setState({
-            setValue:e.target.value,
+            setValue:this.state.gender,
             gender:e.target.value,
         })
       };

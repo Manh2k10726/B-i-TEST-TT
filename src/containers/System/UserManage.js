@@ -82,6 +82,7 @@ class UserManage extends Component {
             totalItemsCount: '',
             idUserEdit:'',
             page:'0',
+            // page:'',
             size:'',
         }
     }
@@ -115,7 +116,18 @@ class UserManage extends Component {
                 totalItemsCount: response.total_page,
             })
         }
-    }
+    } 
+    // getAllStudent = async(pages)=>{
+    //     // let pages=0;
+    //     let response =await getAllStudent({pages:this.state.page});
+    //     if(response ){
+    //         this.setState({
+    //             arrUser: response.data,
+    //             itemsCountPerPage: response.total_count,
+    //             totalItemsCount: response.total_page,
+    //         })
+    //     }
+    // }
     toggleUserModal = () => {
         this.setState({
             isOpenModalUser:!this.state.isOpenModalUser,
@@ -144,20 +156,30 @@ class UserManage extends Component {
         }
         console.log('check data ',data)
     }
-    handlePageChange = async (pageNumber)=> {
+    handlePageChange = async (pageNumbers)=> {
             this.setState({
-                    activePage: pageNumber,
-                    page:pageNumber -1,
-                    
+                    activePage: pageNumbers,
+                    page:pageNumbers -1,
             },async()=> {
-                await this.getAllStudent(pageNumber-1)
-                this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
+                await this.getAllStudent({pageNumber:this.state.page})
+                this.props.history.replace(`/system/user-manages/${this.state.page + 1}`)
                 console.log('check page active:',this.state.page)
              });
             // await this.getAllStudent(this.state.page)
             // this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
             // console.log('check page active:',this.state.page)
     }
+    // handlePageChange = async (event)=> {
+    //     let pageNumbers = event.target.value;
+    //     this.setState({
+    //             activePage: pageNumbers,
+    //             page:pageNumbers -1,
+    //     },async()=> {
+    //         await this.getAllStudent({pageNumber:pageNumbers -1})
+    //         this.props.history.replace(`/system/user-manage/${this.state.page + 1}`)
+    //         console.log('check page active:',this.state.page)
+    //      });
+// }
     handleEdit =(item)=>{
         this.props.history.push(`/detail-user/${item.id}`)
         this.setState({
@@ -218,6 +240,7 @@ class UserManage extends Component {
                         totalItemsCount={this.state.totalItemsCount}
                         itemsCountPerPage={1}
                         pageRangeDisplayed={5}
+                        // onChange={(event)=>this.handlePageChange(event)}
                         onChange={this.handlePageChange}
                         itemClass="page-item"
                         linkClass="page-link"

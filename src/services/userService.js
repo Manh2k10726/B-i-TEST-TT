@@ -3,6 +3,9 @@ import axios from "../axios";
 const  getAllStudent =(data) =>{
     return axios.get(`http://prod.example.fafu.com.vn/employee?page=${data.pageNumber}&size=4`)
 }
+// const  getAllStudent =(data) =>{
+//     return axios.get(`http://prod.example.fafu.com.vn/employee?page=${data}&size=4`)
+// }
 const  editUser =(id,data) =>{
     return axios.put(`http://prod.example.fafu.com.vn/employee/${id}`,data)
 }

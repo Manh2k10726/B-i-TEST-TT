@@ -54,6 +54,7 @@ class App extends Component {
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                                 <Route path={path.DETAIL_USER}component={EditUser}/>
+                                
                             </Switch>
                         </span>
 
